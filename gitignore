@@ -1,0 +1,55 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Local environment files
+.env
+.env.*
+
+# Dataset folders
+data/
+datasets/
+
+# Generated outputs
+outputs/
+checkpoints/
+logs/
+reports/
+figures/
+
+# Model weights and checkpoints
+*.h5
+*.hdf5
+*.keras
+*.ckpt
+*.pb
+*.tflite
+
+# Training and evaluation generated files
+*.csv
+*.json
+*.npy
+*.npz
+*.pkl
+*.pickle
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+*.log
