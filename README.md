@@ -364,10 +364,4 @@ The dataset must be downloaded and organized separately by the user because medi
 
 ---
 
-## 15. Notes
 
-- The repository does not include dataset files.
-- The repository does not include trained model weights by default.
-- The repository does not include any license file.
-- The repository does not include DOI information.
-- All generated results are saved automatically inside the `outputs/` directory.
