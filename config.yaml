@@ -1,0 +1,184 @@
+# Configuration file for EfficientNetB1-MHA-Residual-GI-Classification
+
+project:
+  name: EfficientNetB1-MHA-Residual-GI-Classification
+  task: four_class_gastrointestinal_endoscopy_image_classification
+  seed: 42
+
+paths:
+  data_root: data
+  train_dir: data/train
+  val_dir: data/val
+  test_dir: data/test
+  output_dir: outputs
+  checkpoint_dir: outputs/checkpoints
+  log_dir: outputs/logs
+  report_dir: outputs/reports
+  figure_dir: outputs/figures
+
+dataset:
+  image_size: 224
+  channels: 3
+  color_mode: rgb
+  class_mode: categorical
+  num_classes: 4
+  class_names:
+    - normal
+    - ulcerative_colitis
+    - polyps
+    - esophagitis
+  expected_split:
+    train_per_class: 800
+    val_per_class: 500
+    test_per_class: 200
+
+preprocessing:
+  resize: true
+  normalize: true
+  rescale_value: 0.00392156862745098   # 1/255
+  rgb_conversion: true
+  shuffle_train: true
+  shuffle_eval: false
+
+augmentation:
+  enabled: true
+  apply_to: train_only
+  rotation_range: 49
+  height_shift_range: 0.1
+  width_shift_range: 0.2
+  shear_range: 0.2
+  zoom_range: 0.3
+  horizontal_flip: true
+  vertical_flip: true
+  brightness_range:
+    - 0.1
+    - 3.0
+  fill_mode: constant
+  gaussian_noise:
+    enabled: true
+    mean: 0.0
+    stddev: 0.03
+
+training:
+  batch_size: 16
+  epochs: 100
+  optimizer: adam
+  learning_rate: 0.0001
+  loss: categorical_crossentropy
+  use_adaptive_loss_for_proposed: true
+  adaptive_loss_alpha: 0.15
+  metrics:
+    - accuracy
+
+callbacks:
+  model_checkpoint:
+    enabled: true
+    monitor: val_accuracy
+    mode: max
+    save_best_only: true
+  early_stopping:
+    enabled: true
+    monitor: val_loss
+    patience: 15
+    restore_best_weights: true
+  reduce_lr_on_plateau:
+    enabled: true
+    monitor: val_loss
+    factor: 0.2
+    patience: 5
+    min_lr: 0.000001
+  csv_logger:
+    enabled: true
+
+model:
+  input_shape:
+    - 224
+    - 224
+    - 3
+  dropout_rate: 0.5
+  dense_units: 256
+  activation: softmax
+  pretrained_weights: imagenet
+  trainable_backbone: true
+
+proposed_model:
+  backbone: EfficientNetB1
+  include_top: false
+  attention_heads: 4
+  attention_key_dim: 64
+  attention_dropout: 0.1
+  residual_connection: true
+  global_pooling: average
+  classifier_dropout: 0.5
+
+baseline_models:
+  cnn:
+    enabled: true
+    optimizer: adam
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+    dropout_rate: 0.5
+  vgg16:
+    enabled: true
+    pretrained_weights: imagenet
+    trainable_backbone: true
+    optimizer: adam
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+    dropout_rate: 0.5
+  resnet50:
+    enabled: true
+    pretrained_weights: imagenet
+    trainable_backbone: true
+    optimizer: adam
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+    dropout_rate: 0.5
+  efficientnetb1:
+    enabled: true
+    pretrained_weights: imagenet
+    trainable_backbone: true
+    optimizer: adam
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+    dropout_rate: 0.5
+  proposed:
+    enabled: true
+    pretrained_weights: imagenet
+    trainable_backbone: true
+    optimizer: adam
+    learning_rate: 0.0001
+    batch_size: 16
+    epochs: 100
+    dropout_rate: 0.5
+
+evaluation:
+  average: macro
+  save_predictions: true
+  save_confusion_matrix: true
+  save_classification_report: true
+  save_roc_curve: true
+  measure_inference_time: true
+  compute_parameter_count: true
+  compute_flops_estimate: true
+
+plots:
+  dpi: 300
+  save_format: png
+  accuracy_curve: true
+  loss_curve: true
+  confusion_matrix: true
+  roc_curve: true
+  class_distribution: true
+  model_comparison: true
+  ablation_chart: true
+
+reproducibility:
+  deterministic_ops: false
+  save_config_copy: true
+  save_hyperparameter_table: true
+  save_environment_summary: true
